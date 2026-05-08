@@ -3,13 +3,13 @@
   import MapView from '$lib/components/MapView.svelte';
 </script>
 
-<div class="p-6 flex flex-col h-screen">
-  <div class="mb-4">
+<div class="flex flex-col h-[calc(100vh-3.5rem)] lg:h-screen p-4 lg:p-6">
+  <div class="mb-3">
     <h1 class="text-xl font-bold text-white">Live Map</h1>
     <p class="text-slate-400 text-sm mt-0.5">Real-time guard positions and site locations</p>
   </div>
 
-  <div class="flex gap-4 mb-4 text-sm">
+  <div class="flex flex-wrap gap-3 mb-3 text-sm">
     <span class="flex items-center gap-1.5 text-slate-400">
       <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span> Active
     </span>

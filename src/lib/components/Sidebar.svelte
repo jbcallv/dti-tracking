@@ -3,11 +3,13 @@
   import { session, logout } from '$lib/stub.svelte.js';
   import { goto } from '$app/navigation';
 
+  const { open = false, onClose } = $props();
+
   const navItems = [
-    { href: '/dashboard', label: 'Dashboard',  icon: '#' },
-    { href: '/map',       label: 'Live Map',    icon: '@' },
-    { href: '/teams',     label: 'Teams',       icon: '*' },
-    { href: '/dispatch',  label: 'Dispatch',    icon: '!' },
+    { href: '/dashboard', label: 'Dashboard', icon: '#' },
+    { href: '/map',       label: 'Live Map',  icon: '@' },
+    { href: '/teams',     label: 'Teams',     icon: '*' },
+    { href: '/dispatch',  label: 'Dispatch',  icon: '!' },
   ];
 
   const roleColors = {
@@ -20,19 +22,39 @@
     logout();
     goto('/login');
   }
+
+  function handleNavClick() {
+    onClose?.();
+  }
 </script>
 
-<aside class="w-56 shrink-0 bg-slate-900 border-r border-slate-700 flex flex-col h-screen sticky top-0">
+<!-- Mobile backdrop -->
+{#if open}
+  <div
+    class="fixed inset-0 bg-black/50 z-30 lg:hidden"
+    role="presentation"
+    onclick={onClose}
+  ></div>
+{/if}
+
+<aside class="
+  fixed inset-y-0 left-0 z-40 w-64 flex flex-col
+  bg-slate-900 border-r border-slate-700
+  transition-transform duration-200 ease-in-out
+  {open ? 'translate-x-0' : '-translate-x-full'}
+  lg:static lg:translate-x-0 lg:w-56 lg:shrink-0 lg:h-screen lg:sticky lg:top-0
+">
   <div class="px-5 py-4 border-b border-slate-700">
     <p class="text-white font-bold tracking-tight text-lg">DTI</p>
     <p class="text-slate-500 text-xs">Security Platform</p>
   </div>
 
-  <nav class="flex-1 px-3 py-4 space-y-0.5">
+  <nav class="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
     {#each navItems as item}
       <a
         href={item.href}
-        class="flex items-center gap-3 px-3 py-2 rounded text-sm transition-colors
+        onclick={handleNavClick}
+        class="flex items-center gap-3 px-3 py-2.5 rounded text-sm transition-colors
           {$page.url.pathname.startsWith(item.href)
             ? 'bg-slate-700 text-white'
             : 'text-slate-400 hover:text-white hover:bg-slate-800'}"

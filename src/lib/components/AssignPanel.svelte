@@ -23,7 +23,7 @@
   onclick={onClose}
   onkeydown={e => e.key === 'Escape' && onClose()}
 >
-  <div class="bg-slate-800 border border-slate-700 rounded-lg p-6 w-full max-w-md mx-4" onclick={e => e.stopPropagation()} onkeydown={e => e.stopPropagation()}>
+  <div class="bg-slate-800 border border-slate-700 rounded-lg p-4 lg:p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto" onclick={e => e.stopPropagation()} onkeydown={e => e.stopPropagation()}>
     <div class="flex items-center justify-between mb-5">
       <h2 class="text-white font-semibold">{site.name}</h2>
       <button onclick={onClose} class="text-slate-500 hover:text-white text-xl leading-none">&times;</button>

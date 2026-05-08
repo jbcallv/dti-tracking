@@ -10,13 +10,13 @@
   const vacantCount       = $derived(sites.filter(s => siteStatus(s) === 'vacant').length);
 </script>
 
-<div class="p-6">
-  <div class="mb-6">
+<div class="p-4 lg:p-6">
+  <div class="mb-5">
     <h1 class="text-xl font-bold text-white">Dispatch</h1>
     <p class="text-slate-400 text-sm mt-0.5">Assign personnel to secured locations</p>
   </div>
 
-  <div class="flex gap-6 mb-6 text-sm">
+  <div class="flex flex-wrap gap-4 mb-5 text-sm">
     <span class="text-slate-400">Covered: <span class="text-emerald-400 font-medium">{coveredCount}</span></span>
     <span class="text-slate-400">Understaffed: <span class="text-amber-400 font-medium">{understaffedCount}</span></span>
     <span class="text-slate-400">Vacant: <span class="text-red-400 font-medium">{vacantCount}</span></span>
