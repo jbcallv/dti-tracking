@@ -1,7 +1,10 @@
+import { browser } from '$app/environment';
+
 // ---------------------------------------------------------------------------
-// Auth session — mutable reactive state
+// Auth session — persisted to localStorage so refreshes don't log you out
 // ---------------------------------------------------------------------------
-export const session = $state({ user: null });
+const stored = browser ? JSON.parse(localStorage.getItem('dti_session') ?? 'null') : null;
+export const session = $state({ user: stored });
 
 export const stubUsers = [
   { id: 'u1', name: 'Alex Carter',   email: 'admin@dti.com',    password: 'password', role: 'admin',   badgeId: 'ADM-001' },
@@ -11,12 +14,16 @@ export const stubUsers = [
 
 export function login(email, password) {
   const match = stubUsers.find(u => u.email === email && u.password === password);
-  if (match) session.user = match;
+  if (match) {
+    session.user = match;
+    localStorage.setItem('dti_session', JSON.stringify(match));
+  }
   return !!match;
 }
 
 export function logout() {
   session.user = null;
+  localStorage.removeItem('dti_session');
 }
 
 // ---------------------------------------------------------------------------
