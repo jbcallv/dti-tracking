@@ -1,5 +1,5 @@
 <script>
-  import { Loader } from '@googlemaps/js-api-loader';
+  import { setOptions, importLibrary } from '@googlemaps/js-api-loader';
   import { PUBLIC_GOOGLE_MAPS_KEY } from '$env/static/public';
 
   const { guards, sites } = $props();
@@ -11,15 +11,15 @@
   };
 
   let mapEl = $state(null);
-  let hasKey = $derived(PUBLIC_GOOGLE_MAPS_KEY && PUBLIC_GOOGLE_MAPS_KEY !== 'your_google_maps_api_key_here');
+  const hasKey = PUBLIC_GOOGLE_MAPS_KEY && PUBLIC_GOOGLE_MAPS_KEY !== 'your_google_maps_api_key_here';
 
   $effect(() => {
     if (!hasKey || !mapEl) return;
 
-    const loader = new Loader({ apiKey: PUBLIC_GOOGLE_MAPS_KEY, version: 'weekly' });
+    setOptions({ apiKey: PUBLIC_GOOGLE_MAPS_KEY, version: 'weekly' });
 
-    loader.load().then(google => {
-      const map = new google.maps.Map(mapEl, {
+    importLibrary('maps').then(({ Map }) => {
+      const map = new Map(mapEl, {
         center: { lat: 37.7749, lng: -122.4194 },
         zoom: 14,
         mapTypeId: 'roadmap',
@@ -31,36 +31,38 @@
         ],
       });
 
-      guards.forEach(guard => {
-        new google.maps.Marker({
-          position: { lat: guard.lat, lng: guard.lng },
-          map,
-          title: `${guard.name} (${guard.badgeId})`,
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 8,
-            fillColor: statusColors[guard.status] ?? '#64748b',
-            fillOpacity: 1,
-            strokeColor: '#0f172a',
-            strokeWeight: 2,
-          },
-          label: { text: guard.name[0], color: '#fff', fontSize: '10px', fontWeight: 'bold' },
+      importLibrary('marker').then(({ Marker, SymbolPath }) => {
+        guards.forEach(guard => {
+          new Marker({
+            position: { lat: guard.lat, lng: guard.lng },
+            map,
+            title: `${guard.name} (${guard.badgeId})`,
+            icon: {
+              path: SymbolPath.CIRCLE,
+              scale: 8,
+              fillColor: statusColors[guard.status] ?? '#64748b',
+              fillOpacity: 1,
+              strokeColor: '#0f172a',
+              strokeWeight: 2,
+            },
+            label: { text: guard.name[0], color: '#fff', fontSize: '10px', fontWeight: 'bold' },
+          });
         });
-      });
 
-      sites.forEach(site => {
-        new google.maps.Marker({
-          position: { lat: site.lat, lng: site.lng },
-          map,
-          title: site.name,
-          icon: {
-            path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-            scale: 6,
-            fillColor: '#3b82f6',
-            fillOpacity: 1,
-            strokeColor: '#0f172a',
-            strokeWeight: 2,
-          },
+        sites.forEach(site => {
+          new Marker({
+            position: { lat: site.lat, lng: site.lng },
+            map,
+            title: site.name,
+            icon: {
+              path: SymbolPath.BACKWARD_CLOSED_ARROW,
+              scale: 6,
+              fillColor: '#3b82f6',
+              fillOpacity: 1,
+              strokeColor: '#0f172a',
+              strokeWeight: 2,
+            },
+          });
         });
       });
     });
